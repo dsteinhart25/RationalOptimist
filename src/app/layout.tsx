@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Rational Optimist",
+  title: "Rational Optimist Society",
   description:
-    "Embracing progress through reason, evidence, and a belief in human potential.",
+    "Join a community of thinkers championing human prosperity through innovation, freedom, and technological progress. Free to join.",
 };
 
 export default function RootLayout({
@@ -13,8 +13,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased">{children}</body>
+    <html lang="en" className="scroll-smooth">
+      <body className="antialiased bg-navy text-white">{children}</body>
     </html>
   );
 }
