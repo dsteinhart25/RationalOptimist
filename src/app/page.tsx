@@ -6,7 +6,7 @@ export default function Home() {
         <a href="#" className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/RationalOptimist/logo.png"
+            src="/logo.png"
             alt="Rational Optimist Society"
             className="h-10 w-10"
           />
@@ -68,7 +68,7 @@ export default function Home() {
           <div className="flex-shrink-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/RationalOptimist/logo.png"
+              src="/logo.png"
               alt="Rational Optimist Society — Ostrich Astronaut"
               className="w-64 sm:w-80 h-auto"
             />
@@ -184,7 +184,7 @@ export default function Home() {
         <div className="max-w-2xl mx-auto px-6 text-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/RationalOptimist/logo.png"
+            src="/logo.png"
             alt=""
             className="w-20 h-20 mx-auto mb-6"
           />
@@ -263,7 +263,7 @@ export default function Home() {
           <div className="flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/RationalOptimist/logo.png"
+              src="/logo.png"
               alt=""
               className="h-6 w-6"
             />
