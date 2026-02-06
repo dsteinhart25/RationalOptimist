@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [claude/create-home-page-H8TeA]
 
 permissions:
   contents: read
