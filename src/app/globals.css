@@ -7,4 +7,20 @@
   --color-navy: #0f1b2d;
   --color-navy-light: #1a2d4a;
   --color-cream: #faf8f2;
+  --color-slate: #94a3b8;
+}
+
+/* Star field background for hero */
+.stars {
+  background-image:
+    radial-gradient(2px 2px at 20% 15%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(2px 2px at 40% 35%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 60% 20%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(2px 2px at 80% 40%, rgba(255, 255, 255, 0.25), transparent),
+    radial-gradient(1px 1px at 10% 45%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1px 1px at 70% 10%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(2px 2px at 90% 25%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 50% 50%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1px 1px at 30% 8%, rgba(255, 255, 255, 0.45), transparent),
+    radial-gradient(2px 2px at 15% 30%, rgba(255, 255, 255, 0.2), transparent);
 }
