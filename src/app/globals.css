@@ -1,11 +1,56 @@
 @import "tailwindcss";
 
 @theme {
+  /* Backgrounds — layered depth from innovator DB */
+  --color-bg: #0a0a0b;
+  --color-bg-secondary: #111113;
+  --color-bg-card: #151517;
+  --color-bg-card-hover: #1a1a1d;
+  --color-bg-tertiary: #1d1d20;
+
+  /* Text */
+  --color-text-primary: #f4f4f5;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
+
+  /* Borders */
+  --color-border: #27272a;
+  --color-border-hover: #3f3f46;
+
+  /* ROS brand accent — gold from logo */
   --color-gold: #c9a84c;
   --color-gold-light: #e0c97a;
-  --color-gold-dark: #a88a2e;
-  --color-navy: #0f1b2d;
-  --color-navy-light: #1a2d4a;
-  --color-slate-blue: #6b7fa3;
-  --color-cream: #e8e4d9;
+  --color-gold-dim: rgba(201, 168, 76, 0.15);
+
+  /* Radius — from innovator DB */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  /* Font families */
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  font-family: var(--font-body);
+}
+
+::selection {
+  background: var(--color-gold);
+  color: #000;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-hover);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
 }
