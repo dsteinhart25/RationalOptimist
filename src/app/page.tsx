@@ -16,6 +16,12 @@ export default function Home() {
         </div>
         <div className="flex items-center gap-6">
           <a
+            href={`${BASE}/good-news-gallery`}
+            className="hidden sm:block text-base text-slate-blue hover:text-white transition-colors"
+          >
+            Good News
+          </a>
+          <a
             href="https://rationaloptimistsociety.substack.com/"
             target="_blank"
             rel="noopener noreferrer"
