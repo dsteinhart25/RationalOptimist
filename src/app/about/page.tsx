@@ -31,7 +31,7 @@ export default function About() {
               rel="noopener noreferrer"
               className="hidden sm:inline-flex px-4 py-2 rounded-[8px] text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-bg-card transition-all"
             >
-              Newsletter
+              ROS Diary
             </a>
           </div>
         </div>
@@ -178,8 +178,8 @@ export default function About() {
                 Join the Rational Optimist Society
               </p>
               <p className="text-sm text-text-secondary mb-6">
-                It&apos;s free. Get our newsletter and become part of a growing
-                community.
+                It&apos;s free. Get our weekly ROS Diary and become part of a
+                growing community.
               </p>
               <a
                 href="https://rationaloptimistsociety.substack.com/subscribe"
@@ -213,7 +213,7 @@ export default function About() {
               rel="noopener noreferrer"
               className="hover:text-gold transition-colors"
             >
-              Substack
+              ROS Diary
             </a>
             <a
               href="https://x.com/RationalOptSoc"
