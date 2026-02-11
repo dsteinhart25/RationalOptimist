@@ -122,7 +122,7 @@ export default function Home() {
             style={{ boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4)" }}
           >
             <p
-              className="text-lg font-bold text-text-primary mb-6"
+              className="text-xl font-bold text-text-primary mb-6 text-center"
               style={{ fontFamily: "var(--font-display)" }}
             >
               New here? Join free to start receiving our weekly{" "}
