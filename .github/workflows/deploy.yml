@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [claude/create-home-page-H8TeA]
+    branches: [claude/portfolio-tracking-tool-jX9NX]
 
 permissions:
   contents: read
