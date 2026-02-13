@@ -26,6 +26,12 @@ export default function Home() {
               About
             </a>
             <a
+              href={`${BASE}/portfolio`}
+              className="hidden sm:inline-flex px-4 py-2 rounded-[8px] text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-bg-card transition-all"
+            >
+              Portfolio
+            </a>
+            <a
               href="https://rationaloptimistsociety.substack.com/"
               target="_blank"
               rel="noopener noreferrer"
@@ -172,6 +178,12 @@ export default function Home() {
               className="hover:text-gold transition-colors"
             >
               About
+            </a>
+            <a
+              href={`${BASE}/portfolio`}
+              className="hover:text-gold transition-colors"
+            >
+              Portfolio
             </a>
             <a
               href="https://rationaloptimistsociety.substack.com/"

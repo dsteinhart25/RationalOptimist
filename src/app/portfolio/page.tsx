@@ -1,0 +1,477 @@
+import portfolioData from "../../data/portfolio.json";
+
+const BASE = "/RationalOptimist";
+const LOGO = `${BASE}/logo.png`;
+
+/* ── Types ── */
+interface Position {
+  id: number;
+  newsletter: string;
+  ticker: string;
+  company: string;
+  buyDate: string;
+  buyPrice: number;
+  sellDate: string | null;
+  sellPrice: number | null;
+  freeRideDate: string | null;
+  freeRidePct: number | null;
+  status: "open" | "closed" | "free-ride";
+  notes: string;
+}
+
+interface Newsletter {
+  id: string;
+  name: string;
+  source: string;
+  url: string;
+}
+
+/* ── Helpers ── */
+function fmt(d: string) {
+  const [y, m, day] = d.split("-");
+  return `${m}/${day}/${y}`;
+}
+
+function pct(buy: number, sell: number) {
+  return ((sell - buy) / buy) * 100;
+}
+
+function daysBetween(a: string, b: string) {
+  const ms = new Date(b).getTime() - new Date(a).getTime();
+  return Math.round(ms / 86_400_000);
+}
+
+function holdingPeriod(buyDate: string, sellDate: string | null) {
+  const end = sellDate ?? new Date().toISOString().slice(0, 10);
+  const days = daysBetween(buyDate, end);
+  if (days < 30) return `${days}d`;
+  if (days < 365) return `${Math.round(days / 30)}mo`;
+  const years = Math.floor(days / 365);
+  const rem = Math.round((days % 365) / 30);
+  return rem > 0 ? `${years}y ${rem}mo` : `${years}y`;
+}
+
+/* ── Summary stats ── */
+function computeStats(positions: Position[]) {
+  const open = positions.filter((p) => p.status !== "closed");
+  const closed = positions.filter((p) => p.status === "closed");
+  const freeRides = positions.filter((p) => p.status === "free-ride");
+
+  const closedGains = closed
+    .filter((p) => p.sellPrice !== null)
+    .map((p) => pct(p.buyPrice, p.sellPrice!));
+
+  const winners = closedGains.filter((g) => g > 0).length;
+  const losers = closedGains.filter((g) => g <= 0).length;
+  const avgGain =
+    closedGains.length > 0
+      ? closedGains.reduce((a, b) => a + b, 0) / closedGains.length
+      : 0;
+
+  return {
+    totalPositions: positions.length,
+    openPositions: open.length,
+    closedPositions: closed.length,
+    freeRidePositions: freeRides.length,
+    winners,
+    losers,
+    winRate: winners + losers > 0 ? (winners / (winners + losers)) * 100 : 0,
+    avgGain,
+  };
+}
+
+/* ── Badge component ── */
+function StatusBadge({ status }: { status: string }) {
+  const styles: Record<string, string> = {
+    open: "bg-blue-500/15 text-blue-400 border-blue-500/30",
+    closed: "bg-zinc-500/15 text-zinc-400 border-zinc-500/30",
+    "free-ride": "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+  };
+  const labels: Record<string, string> = {
+    open: "Open",
+    closed: "Closed",
+    "free-ride": "Free Ride",
+  };
+  return (
+    <span
+      className={`inline-block px-2 py-0.5 rounded text-xs font-medium border ${styles[status] ?? styles.open}`}
+    >
+      {labels[status] ?? status}
+    </span>
+  );
+}
+
+/* ── Gain/Loss display ── */
+function GainLoss({ value }: { value: number }) {
+  const positive = value > 0;
+  const color = positive ? "text-emerald-400" : value < 0 ? "text-red-400" : "text-text-muted";
+  return (
+    <span className={`font-semibold ${color}`}>
+      {positive ? "+" : ""}
+      {value.toFixed(1)}%
+    </span>
+  );
+}
+
+/* ── Main page ── */
+export default function PortfolioPage() {
+  const newsletters = portfolioData.newsletters as Newsletter[];
+  const positions = portfolioData.positions as Position[];
+  const stats = computeStats(positions);
+
+  const nlMap = new Map(newsletters.map((n) => [n.id, n]));
+
+  /* group by newsletter */
+  const grouped = new Map<string, Position[]>();
+  for (const p of positions) {
+    const arr = grouped.get(p.newsletter) ?? [];
+    arr.push(p);
+    grouped.set(p.newsletter, arr);
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* ─── Navigation ─── */}
+      <nav className="sticky top-0 z-50 bg-bg/95 backdrop-blur-xl border-b border-border">
+        <div className="flex items-center justify-between px-6 py-3 max-w-[1400px] mx-auto">
+          <a href={BASE} className="flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={LOGO} alt="" className="h-8 w-8" />
+            <span
+              className="text-sm font-bold tracking-[-0.5px]"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              <span className="text-text-primary">Rational Optimist</span>{" "}
+              <span className="text-gold">Society</span>
+            </span>
+          </a>
+          <div className="flex items-center gap-3">
+            <a
+              href={`${BASE}/about`}
+              className="hidden sm:inline-flex px-4 py-2 rounded-[8px] text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-bg-card transition-all"
+            >
+              About
+            </a>
+            <a
+              href={BASE}
+              className="hidden sm:inline-flex px-4 py-2 rounded-[8px] text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-bg-card transition-all"
+            >
+              Home
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      {/* ─── Main Content ─── */}
+      <main
+        className="flex-1 px-4 sm:px-6 py-12"
+        style={{
+          background:
+            "linear-gradient(180deg, #0a0a0b 0%, #111113 50%, #0a0a0b 100%)",
+        }}
+      >
+        <div className="max-w-[1200px] mx-auto">
+          {/* Header */}
+          <div className="mb-10">
+            <h1
+              className="text-2xl sm:text-3xl font-extrabold tracking-[-0.5px] mb-2"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              Portfolio <span className="text-gold">Tracker</span>
+            </h1>
+            <p className="text-text-secondary text-sm">
+              Newsletter positions across all subscriptions. Data updated manually.
+            </p>
+          </div>
+
+          {/* ─── Summary Cards ─── */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+            {[
+              { label: "Open", value: stats.openPositions, color: "text-blue-400" },
+              { label: "Free Rides", value: stats.freeRidePositions, color: "text-emerald-400" },
+              { label: "Closed", value: stats.closedPositions, color: "text-text-secondary" },
+              {
+                label: "Win Rate",
+                value: stats.winRate > 0 ? `${stats.winRate.toFixed(0)}%` : "—",
+                color: "text-gold",
+              },
+            ].map((card) => (
+              <div
+                key={card.label}
+                className="rounded-[12px] bg-bg-card border border-border p-5"
+                style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
+              >
+                <p className="text-xs text-text-muted uppercase tracking-wider mb-1">
+                  {card.label}
+                </p>
+                <p
+                  className={`text-2xl font-bold ${card.color}`}
+                  style={{ fontFamily: "var(--font-display)" }}
+                >
+                  {card.value}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* ─── Avg Closed Gain ─── */}
+          {stats.closedPositions > 0 && (
+            <div className="mb-10 rounded-[12px] bg-bg-card border border-border p-5 max-w-xs"
+              style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
+            >
+              <p className="text-xs text-text-muted uppercase tracking-wider mb-1">
+                Avg Closed Return
+              </p>
+              <p
+                className="text-2xl font-bold"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                <GainLoss value={stats.avgGain} />
+              </p>
+            </div>
+          )}
+
+          {/* ─── Position Tables (grouped by newsletter) ─── */}
+          {Array.from(grouped.entries()).map(([nlId, nlPositions]) => {
+            const nl = nlMap.get(nlId);
+            return (
+              <div key={nlId} className="mb-12">
+                <div className="flex items-center gap-3 mb-4">
+                  <h2
+                    className="text-lg font-bold text-text-primary"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    {nl?.name ?? nlId}
+                  </h2>
+                  {nl && (
+                    <span className="text-xs text-text-muted">
+                      {nl.source}
+                    </span>
+                  )}
+                </div>
+
+                {/* Desktop table */}
+                <div className="hidden md:block rounded-[12px] border border-border overflow-hidden"
+                  style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
+                >
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-bg-tertiary text-text-muted text-xs uppercase tracking-wider">
+                          <th className="text-left px-4 py-3 font-medium">Ticker</th>
+                          <th className="text-left px-4 py-3 font-medium">Company</th>
+                          <th className="text-left px-4 py-3 font-medium">Status</th>
+                          <th className="text-right px-4 py-3 font-medium">Buy Price</th>
+                          <th className="text-left px-4 py-3 font-medium">Buy Date</th>
+                          <th className="text-right px-4 py-3 font-medium">Sell Price</th>
+                          <th className="text-left px-4 py-3 font-medium">Sell Date</th>
+                          <th className="text-left px-4 py-3 font-medium">Free Ride</th>
+                          <th className="text-right px-4 py-3 font-medium">Return</th>
+                          <th className="text-right px-4 py-3 font-medium">Holding</th>
+                          <th className="text-left px-4 py-3 font-medium">Notes</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border">
+                        {nlPositions.map((p) => {
+                          const gain =
+                            p.sellPrice !== null
+                              ? pct(p.buyPrice, p.sellPrice)
+                              : null;
+                          return (
+                            <tr
+                              key={p.id}
+                              className="bg-bg-card hover:bg-bg-card-hover transition-colors"
+                            >
+                              <td className="px-4 py-3 font-semibold text-gold">
+                                {p.ticker}
+                              </td>
+                              <td className="px-4 py-3 text-text-primary">
+                                {p.company}
+                              </td>
+                              <td className="px-4 py-3">
+                                <StatusBadge status={p.status} />
+                              </td>
+                              <td className="px-4 py-3 text-right text-text-primary font-mono">
+                                ${p.buyPrice.toFixed(2)}
+                              </td>
+                              <td className="px-4 py-3 text-text-secondary">
+                                {fmt(p.buyDate)}
+                              </td>
+                              <td className="px-4 py-3 text-right text-text-primary font-mono">
+                                {p.sellPrice !== null
+                                  ? `$${p.sellPrice.toFixed(2)}`
+                                  : "—"}
+                              </td>
+                              <td className="px-4 py-3 text-text-secondary">
+                                {p.sellDate ? fmt(p.sellDate) : "—"}
+                              </td>
+                              <td className="px-4 py-3 text-text-secondary">
+                                {p.freeRideDate ? (
+                                  <span>
+                                    {fmt(p.freeRideDate)}
+                                    {p.freeRidePct !== null && (
+                                      <span className="text-emerald-400 ml-1">
+                                        ({p.freeRidePct}%)
+                                      </span>
+                                    )}
+                                  </span>
+                                ) : (
+                                  "—"
+                                )}
+                              </td>
+                              <td className="px-4 py-3 text-right">
+                                {gain !== null ? <GainLoss value={gain} /> : "—"}
+                              </td>
+                              <td className="px-4 py-3 text-right text-text-muted">
+                                {holdingPeriod(p.buyDate, p.sellDate)}
+                              </td>
+                              <td className="px-4 py-3 text-text-muted text-xs max-w-[200px] truncate">
+                                {p.notes || "—"}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Mobile cards */}
+                <div className="md:hidden flex flex-col gap-3">
+                  {nlPositions.map((p) => {
+                    const gain =
+                      p.sellPrice !== null
+                        ? pct(p.buyPrice, p.sellPrice)
+                        : null;
+                    return (
+                      <div
+                        key={p.id}
+                        className="rounded-[12px] bg-bg-card border border-border p-4"
+                        style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <span className="text-gold font-bold text-base">
+                              {p.ticker}
+                            </span>
+                            <span className="text-text-secondary text-sm ml-2">
+                              {p.company}
+                            </span>
+                          </div>
+                          <StatusBadge status={p.status} />
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div>
+                            <span className="text-text-muted text-xs">Buy</span>
+                            <p className="text-text-primary font-mono">
+                              ${p.buyPrice.toFixed(2)}
+                              <span className="text-text-muted text-xs ml-1">
+                                {fmt(p.buyDate)}
+                              </span>
+                            </p>
+                          </div>
+                          <div>
+                            <span className="text-text-muted text-xs">Sell</span>
+                            <p className="text-text-primary font-mono">
+                              {p.sellPrice !== null
+                                ? `$${p.sellPrice.toFixed(2)}`
+                                : "—"}
+                              {p.sellDate && (
+                                <span className="text-text-muted text-xs ml-1">
+                                  {fmt(p.sellDate)}
+                                </span>
+                              )}
+                            </p>
+                          </div>
+                          {p.freeRideDate && (
+                            <div>
+                              <span className="text-text-muted text-xs">
+                                Free Ride
+                              </span>
+                              <p className="text-emerald-400 text-sm">
+                                {fmt(p.freeRideDate)}
+                                {p.freeRidePct !== null && ` (${p.freeRidePct}%)`}
+                              </p>
+                            </div>
+                          )}
+                          <div>
+                            <span className="text-text-muted text-xs">Return</span>
+                            <p>{gain !== null ? <GainLoss value={gain} /> : "—"}</p>
+                          </div>
+                          <div>
+                            <span className="text-text-muted text-xs">Holding</span>
+                            <p className="text-text-muted">
+                              {holdingPeriod(p.buyDate, p.sellDate)}
+                            </p>
+                          </div>
+                        </div>
+                        {p.notes && (
+                          <p className="text-text-muted text-xs mt-3 border-t border-border pt-2">
+                            {p.notes}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+
+          {/* ─── Empty state ─── */}
+          {positions.length === 0 && (
+            <div className="text-center py-16">
+              <p className="text-text-muted text-lg">No positions tracked yet.</p>
+              <p className="text-text-muted text-sm mt-2">
+                Add positions to <code className="text-gold">src/data/portfolio.json</code> to get started.
+              </p>
+            </div>
+          )}
+
+          {/* ─── How to update ─── */}
+          <div className="mt-8 rounded-[12px] bg-bg-card border border-border p-6"
+            style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
+          >
+            <h3
+              className="text-sm font-bold text-text-primary mb-3"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              How to update
+            </h3>
+            <div className="text-text-muted text-xs space-y-1">
+              <p>
+                Edit <code className="text-gold">src/data/portfolio.json</code> to add, update, or close positions.
+              </p>
+              <p>
+                Each position tracks: ticker, company, buy/sell dates and prices, free ride info, and status (open / closed / free-ride).
+              </p>
+              <p>
+                Returns and holding periods are calculated automatically.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* ─── Footer ─── */}
+      <footer className="border-t border-border bg-bg py-8">
+        <div className="max-w-[1400px] mx-auto px-6 flex items-center justify-between">
+          <p className="text-sm text-text-muted">
+            &copy; {new Date().getFullYear()} Rational Optimist Society
+          </p>
+          <div className="flex gap-6 text-sm text-text-muted">
+            <a href={BASE} className="hover:text-gold transition-colors">
+              Home
+            </a>
+            <a
+              href={`${BASE}/about`}
+              className="hover:text-gold transition-colors"
+            >
+              About
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}

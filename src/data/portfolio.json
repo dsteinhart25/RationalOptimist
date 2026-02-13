@@ -1,0 +1,26 @@
+{
+  "newsletters": [
+    {
+      "id": "disruption-x",
+      "name": "Disruption X",
+      "source": "RiskHedge",
+      "url": "https://www.riskhedge.com/disruption-x"
+    }
+  ],
+  "positions": [
+    {
+      "id": 1,
+      "newsletter": "disruption-x",
+      "ticker": "EXAMPLE",
+      "company": "Example Corp",
+      "buyDate": "2025-01-15",
+      "buyPrice": 50.00,
+      "sellDate": null,
+      "sellPrice": null,
+      "freeRideDate": null,
+      "freeRidePct": null,
+      "status": "open",
+      "notes": "Sample position — replace with real data"
+    }
+  ]
+}
