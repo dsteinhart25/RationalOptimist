@@ -29,7 +29,13 @@ export default function Home() {
               href={`${BASE}/portfolio`}
               className="hidden sm:inline-flex px-4 py-2 rounded-[8px] text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-bg-card transition-all"
             >
-              Portfolio
+              Disruption X
+            </a>
+            <a
+              href={`${BASE}/di-portfolio`}
+              className="hidden sm:inline-flex px-4 py-2 rounded-[8px] text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-bg-card transition-all"
+            >
+              Disruption Investor
             </a>
             <a
               href="https://rationaloptimistsociety.substack.com/"
@@ -183,7 +189,13 @@ export default function Home() {
               href={`${BASE}/portfolio`}
               className="hover:text-gold transition-colors"
             >
-              Portfolio
+              Disruption X
+            </a>
+            <a
+              href={`${BASE}/di-portfolio`}
+              className="hover:text-gold transition-colors"
+            >
+              Disruption Investor
             </a>
             <a
               href="https://rationaloptimistsociety.substack.com/"

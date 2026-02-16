@@ -184,6 +184,13 @@ export default function PortfolioPage() {
           </a>
           <div className="flex items-center gap-3">
             <a
+              href={`${BASE}/di-portfolio`}
+              className="hidden sm:inline-flex px-4 py-2 rounded-lg text-sm font-medium transition-all"
+              style={{ color: RH.textSecondary }}
+            >
+              Disruption Investor
+            </a>
+            <a
               href={BASE}
               className="hidden sm:inline-flex px-4 py-2 rounded-lg text-sm font-medium transition-all"
               style={{ color: RH.textSecondary }}
