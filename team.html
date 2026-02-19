@@ -139,6 +139,36 @@
             padding-left: 16px;
             border-left: 2px solid var(--gold);
         }
+        .group-photo {
+            margin-bottom: 48px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-glow);
+        }
+        .group-photo img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .group-photo-caption {
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 12px;
+            font-style: italic;
+        }
+        .member-photo {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-glow);
+            margin-bottom: 12px;
+        }
+        .team-card.honorary .member-photo {
+            width: 90px;
+            height: 90px;
+        }
         @media (max-width: 768px) {
             .content { padding: 100px 24px 60px; }
             .team-grid { grid-template-columns: 1fr; }
@@ -154,40 +184,51 @@
     <div class="nav-links">
         <a href="#merch">Merch</a>
         <a href="#books">Books</a>
-        <a href="#patrons" class="patron-link">🔒 Patron's Area</a>
+        <a href="https://paleofaire.github.io/ros-startup-database/#map" class="patron-link">🔒 Patron's Area</a>
     </div>
 </nav>
 <div class="content">
     <h1><span class="gold">Team</span></h1>
+    <div class="group-photo">
+        <img src="images/dan-stephen-matt.jpg" alt="Dan Steinhart, Stephen McBride, and Matt Ridley">
+    </div>
+    <p class="group-photo-caption">Dan Steinhart, Stephen McBride, and Matt Ridley</p>
     <div class="team-grid">
         <div class="team-card honorary">
+            <img class="member-photo" src="images/matt-ridley.jpg" alt="Matt Ridley">
             <p class="eyebrow">Honorary Founder</p>
             <h3>Matt Ridley</h3>
             <p>The founding father of rational optimism. Matt created the idea and shared it with the world in his bestselling book <em>The Rational Optimist</em>. The work we do at ROS stands on Matt's shoulders.</p>
         </div>
         <div class="team-card">
+            <img class="member-photo" src="images/stephen-mcbride.jpg" alt="Stephen McBride">
             <h3>Stephen McBride</h3>
             <p>Stephen writes the <em>Rational Optimist Diary</em> and co-hosts the <em>Rational Optimist Show</em>. Investor and entrepreneur.</p>
             <blockquote>Technology — the internet — saved my life, almost literally. I want to make the world more rationally optimistic to give the next million kids in rough situations the best chance to flourish.</blockquote>
         </div>
         <div class="team-card">
+            <img class="member-photo" src="images/dan-steinhart.jpg" alt="Dan Steinhart">
             <h3>Dan Steinhart</h3>
             <p>Dan edits the <em>Rational Optimist Diary</em> and co-hosts the <em>Rational Optimist Show</em>. Entrepreneur and CPA.</p>
             <blockquote>Pessimists sound smart, optimists make money. Rational optimists live happier lives, have better careers, and raise happier kids. Why be anything else?</blockquote>
         </div>
         <div class="team-card">
+            <img class="member-photo" src="images/john-mauldin.jpg" alt="John Mauldin">
             <h3>John Mauldin</h3>
             <p>Founding member. Author, speaker, macroeconomic analyst. His newsletter <em>Thoughts from the Frontline</em> is one of the most widely distributed macro letters in the industry.</p>
         </div>
         <div class="team-card">
+            <img class="member-photo" src="images/olivier-garret.jpg" alt="Olivier Garret">
             <h3>Olivier Garret</h3>
             <p>Co-founder. Entrepreneur, CEO, and investor. Founded ROS to give needed hope to younger generations.</p>
         </div>
         <div class="team-card">
+            <img class="member-photo" src="images/david-galland.jpg" alt="David Galland">
             <h3>David Galland</h3>
             <p>Co-founder and contributing editor. Serial entrepreneur and writer. Divides his time between England and rural Argentina.</p>
         </div>
         <div class="team-card">
+            <img class="member-photo" src="images/ed-dagostino.jpg" alt="Ed D'Agostino">
             <h3>Ed D'Agostino</h3>
             <p>Partner and COO at Mauldin Economics. Advisor, investor, and host of the <em>Global Macro Update</em> podcast.</p>
         </div>
